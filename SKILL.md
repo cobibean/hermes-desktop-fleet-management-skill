@@ -150,6 +150,31 @@ ss -ltnp | grep ':<port>'
 ps -eo pid,ppid,etimes,user,args | grep 'hermes dashboard' | grep -v grep
 ```
 
+Check whether a critical global/fleet service can stay dead after a clean exit
+or SIGTERM:
+
+```bash
+systemctl --user show hermes-dashboard-fleet.service \
+  -p Restart -p RestartUSec -p StartLimitIntervalUSec -p StartLimitBurst
+```
+
+For always-on fleet/default backends, consider a user-systemd drop-in like:
+
+```ini
+[Unit]
+StartLimitIntervalSec=60
+StartLimitBurst=12
+
+[Service]
+Restart=always
+RestartSec=5
+```
+
+Then run `systemctl --user daemon-reload` and verify the properties. This is
+useful when updates or external process termination leave the global backend
+`inactive dead`, causing Desktop to stick on connecting even though dedicated
+profile services still work.
+
 Restart only the failing service unless a shared dependency is proven down:
 
 ```bash
