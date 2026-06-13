@@ -1,0 +1,5 @@
+interface:
+  display_name: "Hermes Desktop Fleet Management"
+  short_description: "Debug Hermes Desktop remote fleet routing"
+  default_prompt: "Use $hermes-desktop-fleet-management to diagnose a Hermes Desktop remote fleet routing or workspace issue."
+
